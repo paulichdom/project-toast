@@ -1,18 +1,19 @@
 import { useState } from "react";
-import Toast from "../Toast";
-import Button from "../Button";
 import { XCircle } from "react-feather";
+import Button from "../Button";
+import ToastShelf from "../ToastShelf/ToastShelf";
 
 import styles from "./ToastPlayground.module.css";
 
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 
 function ToastPlayground() {
+  const defaultVariantOption = VARIANT_OPTIONS[0];
+
   const [inputMessage, setInputMessage] = useState("");
-  const [toastMessage, setToastMessage] = useState("");
-  const [variantOption, setVariantOption] = useState(VARIANT_OPTIONS[0]);
-  const [showToast, setShowToast] = useState(false);
+  const [variantOption, setVariantOption] = useState(defaultVariantOption);
   const [showValidationMessage, setShowValidationMessage] = useState(false);
+  const [toasts, setToasts] = useState([]);
 
   const handleSetMessage = (event) => {
     const nextMessage = event.currentTarget.value;
@@ -31,15 +32,27 @@ function ToastPlayground() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     if (inputMessage.length < 3) {
       setShowValidationMessage(true);
       return;
     }
 
-    if (!showToast) {
-      setToastMessage(inputMessage);
-      setShowToast(true);
-    }
+    const nextToast = {
+      id: crypto.randomUUID(),
+      variant: variantOption,
+      message: inputMessage,
+    };
+
+    setToasts((prevToasts) => [...prevToasts, nextToast]);
+    setInputMessage("");
+    setVariantOption(defaultVariantOption);
+  };
+
+  const handleDismissToast = (toastId) => {
+    setToasts((prevToasts) =>
+      prevToasts.filter((toast) => !Boolean(toast.id === toastId)),
+    );
   };
 
   return (
@@ -48,13 +61,7 @@ function ToastPlayground() {
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
-      {showToast && (
-        <Toast
-          variant={variantOption}
-          message={toastMessage}
-          dismiss={() => setShowToast(false)}
-        />
-      )}
+      <ToastShelf toasts={toasts} dismiss={handleDismissToast} />
       <div className={styles.controlsWrapper}>
         <div className={styles.row}>
           <label
