@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import ToastShelf from "../components/ToastShelf/ToastShelf";
+import { useEscapeKey } from "../hooks/useEscapeKey";
 
 export const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 
@@ -24,20 +25,7 @@ export const ToastProvider = ({ children }) => {
     );
   };
 
-  React.useEffect(() => {
-    const escapeKeyListener = (event) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        setToasts([]);
-      }
-    };
-
-    document.addEventListener("keydown", escapeKeyListener);
-
-    return () => {
-      document.removeEventListener("keydown", escapeKeyListener);
-    };
-  }, []);
+  useEscapeKey(() => setToasts([]));
 
   const value = React.useMemo(() => showToast, []);
 
