@@ -24,6 +24,20 @@ export const ToastProvider = ({ children }) => {
     );
   };
 
+  React.useEffect(() => {
+    const escapeKeyListener = (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setToasts([]);
+      }
+    };
+
+    document.addEventListener("keydown", escapeKeyListener);
+
+    return () => {
+      document.removeEventListener("keydown", escapeKeyListener);
+    };
+  }, []);
 
   const value = React.useMemo(() => showToast, []);
 
