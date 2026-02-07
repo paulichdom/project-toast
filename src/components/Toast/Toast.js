@@ -9,7 +9,6 @@ import {
 import VisuallyHidden from "../VisuallyHidden";
 
 import styles from "./Toast.module.css";
-import { doc } from "prettier";
 
 const ICONS_BY_VARIANT = {
   notice: Info,
@@ -25,8 +24,19 @@ function Toast({ variant, message, dismiss }) {
       <div className={styles.iconContainer}>
         <Icon size={24} />
       </div>
-      <p className={styles.content}>{message}</p>
-      <button className={styles.closeButton} onClick={dismiss}>
+      <p className={styles.content}>
+        <VisuallyHidden>
+          {variant}
+          {" - "}
+        </VisuallyHidden>
+        {message}
+      </p>
+      <button
+        className={styles.closeButton}
+        onClick={dismiss}
+        aria-label="Dismiss message"
+        aria-live="off"
+      >
         <X size={24} />
         <VisuallyHidden>Dismiss message</VisuallyHidden>
       </button>
