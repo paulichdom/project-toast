@@ -1,10 +1,10 @@
-import React from "react";
+import {createPortal} from "react-dom";
 
 import Toast from "../Toast";
 import styles from "./ToastShelf.module.css";
 
 function ToastShelf({ toasts, dismiss }) {
-  return (
+  return createPortal(
     <ol
       className={styles.wrapper}
       role="region"
@@ -20,7 +20,8 @@ function ToastShelf({ toasts, dismiss }) {
           />
         </li>
       ))}
-    </ol>
+    </ol>,
+    document.getElementById("toast-root"),
   );
 }
 
